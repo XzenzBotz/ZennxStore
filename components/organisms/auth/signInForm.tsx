@@ -1,7 +1,7 @@
 import Link from "next/link";
 import React from "react";
 import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
+import { zodResolver } from '@hookform/resolvers/zod';
 import { SigninInputTypes, signinSchema } from "@utility/schema/auth.schema";
 import { Form, Spinner } from "react-bootstrap";
 import { useRouter } from "next/router";
