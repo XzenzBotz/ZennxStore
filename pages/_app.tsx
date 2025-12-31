@@ -1,65 +1,122 @@
+// styles
 import "@styles/scss/index.scss";
-import { NextPage } from "next";
+import "aos/dist/aos.css";
+
+// next
 import type { AppProps } from "next/app";
+import type { NextPage } from "next";
 import Head from "next/head";
+
+// react
 import { useEffect, ReactNode, ComponentType } from "react";
+
+// bootstrap
 import { SSRProvider } from "react-bootstrap";
-import { QueryClient, QueryClientProvider } from "react-query";
+
+// react-query (v3)
+import {
+  QueryClient,
+  QueryClientProvider,
+} from "react-query";
 import { ReactQueryDevtools } from "react-query/devtools";
+
+// components
 import ToastWrapper from "@components/organisms/toastWrapper";
-import MainProvider, { ComposeContext } from "@utility/context";
 import PageProgress from "@components/molecules/pageProgress";
 
+// providers
+import MainProvider from "@utility/context";
+import { ComposeContext } from "@utility/context";
+
+// ===============================
+// React Query Config
+// ===============================
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
+      retry: 1,
+      refetchOnWindowFocus: false,
       staleTime: 5 * 1000,
     },
   },
 });
 
-type NextPageWithProvider = NextPage & {
-  provider?: ComponentType;
+// ===============================
+// Types
+// ===============================
+type NextPageWithProviders = NextPage & {
   providers?: ComponentType[];
 };
 
-type AppPropsWithProvider = AppProps & {
-  Component: NextPageWithProvider;
+type AppPropsWithProviders = AppProps & {
+  Component: NextPageWithProviders;
 };
 
+// ===============================
+// Page Context Provider
+// ===============================
 const PageCtxProvider = ({
   children,
-  prov,
+  providers,
 }: {
   children: ReactNode;
-  prov: React.ElementType[];
-}) => <ComposeContext providers={prov}>{children}</ComposeContext>;
+  providers: ComponentType[];
+}) => {
+  if (!providers || providers.length === 0) return <>{children}</>;
 
-function MyApp({ Component, pageProps }: AppPropsWithProvider) {
+  return (
+    <ComposeContext providers={providers}>
+      {children}
+    </ComposeContext>
+  );
+};
+
+// ===============================
+// App
+// ===============================
+export default function MyApp({
+  Component,
+  pageProps,
+}: AppPropsWithProviders) {
+  // Init AOS (client-only)
   useEffect(() => {
-    const isBrowser = typeof window !== "undefined";
-    const AOS = isBrowser ? require("aos") : undefined;
-    AOS.init();
+    if (typeof window !== "undefined") {
+      const AOS = require("aos");
+      AOS.init({
+        once: true,
+        duration: 800,
+        easing: "ease-in-out",
+      });
+    }
   }, []);
 
-  const pageProviders = Component.providers ? Component.providers : [];
+  const pageProviders = Component.providers || [];
 
   return (
     <>
+      <Head>
+        <title>ZennxStore</title>
+        <meta
+          name="viewport"
+          content="width=device-width, initial-scale=1"
+        />
+        <meta name="theme-color" content="#0d6efd" />
+      </Head>
+
       <QueryClientProvider client={queryClient}>
         <SSRProvider>
           <MainProvider>
-            <PageCtxProvider prov={pageProviders}>
+            <PageCtxProvider providers={pageProviders}>
               <PageProgress />
               <Component {...pageProps} />
               <ToastWrapper />
             </PageCtxProvider>
           </MainProvider>
         </SSRProvider>
-        <ReactQueryDevtools />
+
+        {/* React Query Devtools (auto disabled on prod) */}
+        <ReactQueryDevtools initialIsOpen={false} />
       </QueryClientProvider>
     </>
   );
-}
-
-export default MyApp;
+  }
