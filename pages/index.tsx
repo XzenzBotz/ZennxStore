@@ -1,40 +1,44 @@
 import type { NextPage } from "next";
-import Head from "next/head";
-import Story from "@organisms/story";
-import FeaturedGames from "@organisms/featuredGames";
-import FeatureStepTransaction from "@organisms/featureStepTransaction";
-import MainBanner from "@organisms/mainBanner";
-import Reached from "@organisms/reached";
-import { useEffect } from "react";
+
+// layout
 import Layout from "@components/organisms/layout";
 
-const Home: NextPage = () => {
-  useEffect(() => {
-    const isBrowser = typeof window !== "undefined";
-    const AOS = isBrowser ? require("aos") : undefined;
-    AOS.init();
-  }, []);
+// organisms
+import MainBanner from "@components/organisms/mainBanner";
+import FeatureStepTransaction from "@components/organisms/featureStepTransaction";
+import FeaturedGames from "@components/organisms/featuredGames";
+import Reached from "@components/organisms/reached";
+import Story from "@components/organisms/story";
 
+const Home: NextPage = () => {
   return (
-    <>
-      <Layout pageTitle="Home">
-        {/* Header */}
-        <MainBanner />
-        {/* 3 Column - Feature */}
-        <FeatureStepTransaction />
-        {/* 5 Column - Featured-game */}
-        <FeaturedGames />
-        {/* Reached */}
-        <Reached />
-        {/* Story */}
-        <Story
-          reverse
-          title1nd="Win The Battler."
-          title2nd="Be The Chapion."
-          image="/img/Header-9.png"
-          text="Kami menyediakan jutaan cara untuk membantu players menjadi
-        pemenang sejati"
-          action="/about"
+    <Layout pageTitle="Home">
+      {/* Hero / Banner */}
+      <MainBanner />
+
+      {/* Step Transaction */}
+      <FeatureStepTransaction />
+
+      {/* Featured Games */}
+      <FeaturedGames />
+
+      {/* Reached Section */}
+      <Reached />
+
+      {/* Story Section */}
+      <Story
+        reverse
+        title1nd="Win The Battle."
+        title2nd="Be The Champion."
+        image="/img/Header-9.png"
+        text="Kami menyediakan jutaan cara untuk membantu players menjadi pemenang sejati"
+        action="/about"
+      />
+    </Layout>
+  );
+};
+
+export default Home;          action="/about"
         />
       </Layout>
     </>
