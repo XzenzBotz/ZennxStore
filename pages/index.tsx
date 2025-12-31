@@ -1,19 +1,27 @@
 import type { NextPage } from "next";
+import { useEffect } from "react";
 
-// layout
 import Layout from "@components/organisms/layout";
-
-// organisms
-import MainBanner from "@components/organisms/mainBanner";
-import FeatureStepTransaction from "@components/organisms/featureStepTransaction";
-import FeaturedGames from "@components/organisms/featuredGames";
-import Reached from "@components/organisms/reached";
-import Story from "@components/organisms/story";
+import MainBanner from "@organisms/mainBanner";
+import FeatureStepTransaction from "@organisms/featureStepTransaction";
+import FeaturedGames from "@organisms/featuredGames";
+import Reached from "@organisms/reached";
+import Story from "@organisms/story";
 
 const Home: NextPage = () => {
+  useEffect(() => {
+    import("aos").then((AOS) => {
+      AOS.default.init({
+        once: true,
+        duration: 800,
+        easing: "ease-in-out",
+      });
+    });
+  }, []);
+
   return (
     <Layout pageTitle="Home">
-      {/* Hero / Banner */}
+      {/* Hero */}
       <MainBanner />
 
       {/* Step Transaction */}
@@ -22,10 +30,10 @@ const Home: NextPage = () => {
       {/* Featured Games */}
       <FeaturedGames />
 
-      {/* Reached Section */}
+      {/* Reached */}
       <Reached />
 
-      {/* Story Section */}
+      {/* Story */}
       <Story
         reverse
         title1nd="Win The Battle."
@@ -35,6 +43,10 @@ const Home: NextPage = () => {
         action="/about"
       />
     </Layout>
+  );
+};
+
+export default Home;    </Layout>
   );
 };
 
